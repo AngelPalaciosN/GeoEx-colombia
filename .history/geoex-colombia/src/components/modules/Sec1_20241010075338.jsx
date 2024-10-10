@@ -16,7 +16,7 @@ function Sec1() {
         <div className="row">
           <div className="col-12 text-center">
             <h1 className="display-4">
-              Conoce tu{' '}
+              Conoce tus{' '}
               <span className="text-primary">
                 {text}
                 <Cursor />

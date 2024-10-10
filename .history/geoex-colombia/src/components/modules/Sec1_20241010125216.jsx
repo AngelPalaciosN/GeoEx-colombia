@@ -3,7 +3,7 @@ import { useTypewriter, Cursor } from 'react-simple-typewriter';
 
 function Sec1() {
   const [text] = useTypewriter({
-    words: ['territorio', 'país', 'Colombia'],
+    words: ['territorios', 'país', 'Colombia'],
     loop: true,
     typeSpeed: 100,
     deleteSpeed: 50,
@@ -16,7 +16,7 @@ function Sec1() {
         <div className="row">
           <div className="col-12 text-center">
             <h1 className="display-4">
-              Conoce tu{' '}
+              Conoce tus{' '}
               <span className="text-primary">
                 {text}
                 <Cursor />
