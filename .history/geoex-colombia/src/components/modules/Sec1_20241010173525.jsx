@@ -10,10 +10,6 @@ function Sec1() {
     setMapV(true);
   };
 
-  const handleCloseMap = () => {
-    setMapV(false);
-  };
-
   const [text] = useTypewriter({
     words: ['territorio', 'país', 'Colombia'],
     loop: true,
@@ -55,7 +51,7 @@ function Sec1() {
 
       {isMapV && (
         <div className="MapaV">
-          <Mapa onClose={handleCloseMap} />
+          <Mapa />
         </div>
       )}
     </div>
