@@ -57,12 +57,6 @@ function Sec1() {
         </div>
       </section>
 
-      {/* Overlay oscuro */}
-      {isMapV && (
-        <div className={`overlay ${isAnimating ? 'show' : 'hide'}`}></div>
-      )}
-
-      {/* Componente MapaV */}
       {isMapV && (
         <div className={`MapaV ${isAnimating ? 'show' : 'hide'}`}>
           <Mapa onClose={handleCloseMap} />

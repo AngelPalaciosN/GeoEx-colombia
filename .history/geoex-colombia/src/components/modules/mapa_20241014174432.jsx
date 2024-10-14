@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import '../../scss/mapa.scss';
 import { ReactComponent as ColombiaMap } from '../../images/co.svg';
-import Swal from 'sweetalert2';
 
 const departments = [
   "Amazonas", "Antioquia", "Arauca", "Atlántico", "Bolívar", "Boyacá", "Caldas", "Caquetá", "Casanare", "Cauca",
@@ -51,33 +52,11 @@ export default function Mapa({ onClose }) {
   const [targetDepartment, setTargetDepartment] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [nextQuestionMessage, setNextQuestionMessage] = useState("");
-
-  const handleNextDepartment = useCallback(() => {
-    const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
-    setTargetDepartment(randomDepartment);
-    setSelectedDepartment("");
-    setShowResult(false);
-    setNextQuestionMessage("");
-
-    const correctDepartmentId = departmentIds[targetDepartment];
-    const correctElement = document.getElementById(correctDepartmentId);
-    if (correctElement) {
-      correctElement.classList.remove('correct-department');
-    }
-  }, [targetDepartment]);
-
-  useEffect(() => {
-    handleNextDepartment();
-  }, [handleNextDepartment]);
 
   const handleDepartmentClick = (event) => {
     const departmentId = event.target.id;
     const department = Object.keys(departmentIds).find(key => departmentIds[key] === departmentId);
-    
-    if (department) {
-      setSelectedDepartment(department);
-    }
+    setSelectedDepartment(department || "");
   };
 
   const handleSubmit = () => {
@@ -85,26 +64,36 @@ export default function Mapa({ onClose }) {
     setIsCorrect(correct);
     setShowResult(true);
 
-    Swal.fire({
-      title: correct ? '¡Correcto!' : 'Incorrecto',
-      text: correct ? "¡Bien hecho!" : `Elegiste ${selectedDepartment}. Revisa el mapa para ver la opción correcta.`,
-      icon: correct ? 'success' : 'error',
-      confirmButtonText: 'Continuar',
-    }).then(() => {
-      if (!correct) {
-        const correctDepartmentId = departmentIds[targetDepartment];
-        const correctElement = document.getElementById(correctDepartmentId);
-        if (correctElement) {
-          correctElement.classList.add('correct-department');
-        }
+    if (!correct) {
+      const correctDepartmentId = departmentIds[targetDepartment];
+      const correctElement = document.getElementById(correctDepartmentId);
+      if (correctElement) {
+        correctElement.classList.add('correct-department');
       }
+    }
 
-      setNextQuestionMessage("La próxima pregunta aparecerá en 5 segundos...");
-      setTimeout(() => {
-        handleNextDepartment();
-      }, 5000);
-    });
+    // Cambiar al siguiente departamento después de 5 segundos
+    setTimeout(() => {
+      handleNextDepartment();
+    }, 5000);
   };
+
+  const handleNextDepartment = () => {
+    const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
+    setTargetDepartment(randomDepartment);
+    setSelectedDepartment("");
+    setShowResult(false);
+
+    const correctDepartmentId = departmentIds[targetDepartment];
+    const correctElement = document.getElementById(correctDepartmentId);
+    if (correctElement) {
+      correctElement.classList.remove('correct-department');
+    }
+  };
+
+  useEffect(() => {
+    handleNextDepartment();
+  }, []);
 
   return (
     <div className="card">
@@ -116,19 +105,9 @@ export default function Mapa({ onClose }) {
             className="map"
             onClick={handleDepartmentClick}
           />
-          {/* Aquí se pueden agregar los IDs a los departamentos en el mapa */}
-          {departments.map(department => (
-            <path
-              key={department}
-              id={departmentIds[department]} // Asigna el ID correspondiente
-              className={`department ${selectedDepartment === department ? 'selected' : ''}`} // Aplica la clase 'selected'
-              onClick={handleDepartmentClick}
-            />
-          ))}
         </div>
         <div className="game-info">
           <h3 className="subtitle">Ubica el departamento: {targetDepartment}</h3>
-          {nextQuestionMessage && <p>{nextQuestionMessage}</p>}
           <button
             onClick={handleSubmit}
             disabled={!selectedDepartment || showResult}
@@ -140,7 +119,7 @@ export default function Mapa({ onClose }) {
             <div className={`result ${isCorrect ? 'correct' : 'incorrect'}`}>
               {isCorrect 
                 ? "¡Correcto!" 
-                : `Incorrecto, Elegiste ${selectedDepartment}, revisa el mapa para ver la opción correcta`}
+                : `Incorrecto, Elegiste ${selectedDepartment}, revisa el mapa`}
             </div>
           )}
         </div>

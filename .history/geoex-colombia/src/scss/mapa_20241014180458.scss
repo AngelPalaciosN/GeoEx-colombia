@@ -100,21 +100,15 @@ $correct-color: #0033A0;
   .department {
     cursor: pointer;
     transition: fill 0.2s;
-
+  
     &:hover {
-      fill: #ffcc00; // Color al hacer hover
+      fill: #4a5568;
     }
-
-    &.selected { // Clase para el departamento seleccionado
-      fill: #ffcc00; // Mantiene el color amarillo al ser seleccionado
+  
+    &.selected {
+      fill: #3182ce;
     }
-
-    &.correct-department {
-      fill: #0033A0; // Color azul para el departamento correcto
-      transition: fill 0.5s ease;
-      opacity: 0.5; 
-    }
-}
+  }
   
   .game-info {
     margin-bottom: 1.5rem;
@@ -221,6 +215,6 @@ $correct-color: #0033A0;
   
   .correct-department {
     fill: $correct-color; // Cambia el color de llenado a azul
-    transition: fill 3s ease; // Añade una transición suave
+    transition: fill 0.5s ease; // Añade una transición suave
     opacity: 0.5; // Cambia la opacidad si deseas hacer el departamento más tenue
 }

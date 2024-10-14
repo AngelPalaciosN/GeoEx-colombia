@@ -3,12 +3,14 @@
   height: 70px;
   background: #151792;
   border-radius: 50px;
-
+  
+  /* WebKit prefijo para navegadores como Chrome y Safari */
   -webkit-mask: radial-gradient(circle 31px at 50% calc(100% + 13px),#000 95%,#0000) top 4px left 50%,
     radial-gradient(circle 31px,#000 95%,#0000) center,
     radial-gradient(circle 31px at 50% -13px,#000 95%,#0000) bottom 4px left 50%,
     linear-gradient(#000 0 0);
 
+  /* Propiedad estándar para Firefox y otros navegadores que soportan "mask" */
   mask: radial-gradient(circle 31px at 50% calc(100% + 13px),#000 95%,#0000) top 4px left 50%,
     radial-gradient(circle 31px,#000 95%,#0000) center,
     radial-gradient(circle 31px at 50% -13px,#000 95%,#0000) bottom 4px left 50%,

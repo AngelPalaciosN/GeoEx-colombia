@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import '../../scss/mapa.scss';
 import { ReactComponent as ColombiaMap } from '../../images/co.svg';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; // Importar SweetAlert
 
 const departments = [
   "Amazonas", "Antioquia", "Arauca", "Atlántico", "Bolívar", "Boyacá", "Caldas", "Caquetá", "Casanare", "Cauca",
@@ -51,33 +53,24 @@ export default function Mapa({ onClose }) {
   const [targetDepartment, setTargetDepartment] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [nextQuestionMessage, setNextQuestionMessage] = useState("");
-
-  const handleNextDepartment = useCallback(() => {
-    const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
-    setTargetDepartment(randomDepartment);
-    setSelectedDepartment("");
-    setShowResult(false);
-    setNextQuestionMessage("");
-
-    const correctDepartmentId = departmentIds[targetDepartment];
-    const correctElement = document.getElementById(correctDepartmentId);
-    if (correctElement) {
-      correctElement.classList.remove('correct-department');
-    }
-  }, [targetDepartment]);
+  const [timeElapsed, setTimeElapsed] = useState(0);
 
   useEffect(() => {
     handleNextDepartment();
-  }, [handleNextDepartment]);
+    
+    // Iniciar el contador
+    const timer = setInterval(() => {
+      setTimeElapsed(prevTime => prevTime + 1);
+    }, 1000);
+
+    // Limpiar el timer al desmontar el componente
+    return () => clearInterval(timer);
+  }, []);
 
   const handleDepartmentClick = (event) => {
     const departmentId = event.target.id;
     const department = Object.keys(departmentIds).find(key => departmentIds[key] === departmentId);
-    
-    if (department) {
-      setSelectedDepartment(department);
-    }
+    setSelectedDepartment(department || "");
   };
 
   const handleSubmit = () => {
@@ -99,11 +92,25 @@ export default function Mapa({ onClose }) {
         }
       }
 
-      setNextQuestionMessage("La próxima pregunta aparecerá en 5 segundos...");
       setTimeout(() => {
         handleNextDepartment();
       }, 5000);
     });
+  };
+
+  const handleNextDepartment = () => {
+    const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
+    setTargetDepartment(randomDepartment);
+    setSelectedDepartment("");
+    setShowResult(false);
+
+    const correctDepartmentId = departmentIds[targetDepartment];
+    const correctElement = document.getElementById(correctDepartmentId);
+    if (correctElement) {
+      correctElement.classList.remove('correct-department');
+    }
+
+    setTimeElapsed(0);
   };
 
   return (
@@ -116,19 +123,10 @@ export default function Mapa({ onClose }) {
             className="map"
             onClick={handleDepartmentClick}
           />
-          {/* Aquí se pueden agregar los IDs a los departamentos en el mapa */}
-          {departments.map(department => (
-            <path
-              key={department}
-              id={departmentIds[department]} // Asigna el ID correspondiente
-              className={`department ${selectedDepartment === department ? 'selected' : ''}`} // Aplica la clase 'selected'
-              onClick={handleDepartmentClick}
-            />
-          ))}
         </div>
         <div className="game-info">
           <h3 className="subtitle">Ubica el departamento: {targetDepartment}</h3>
-          {nextQuestionMessage && <p>{nextQuestionMessage}</p>}
+          <p>Tiempo transcurrido: {timeElapsed} segundos</p>
           <button
             onClick={handleSubmit}
             disabled={!selectedDepartment || showResult}

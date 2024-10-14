@@ -11,7 +11,7 @@ const departments = [
 ];
 
 const departmentIds = {
-  "Nariño": "CONAR",
+"Nariño": "CONAR",
   "Putumayo": "COPUT",
   "Chocó": "COCHO",
   "Guainía": "COGUA",
@@ -74,10 +74,7 @@ export default function Mapa({ onClose }) {
   const handleDepartmentClick = (event) => {
     const departmentId = event.target.id;
     const department = Object.keys(departmentIds).find(key => departmentIds[key] === departmentId);
-    
-    if (department) {
-      setSelectedDepartment(department);
-    }
+    setSelectedDepartment(department || "");
   };
 
   const handleSubmit = () => {
@@ -116,15 +113,6 @@ export default function Mapa({ onClose }) {
             className="map"
             onClick={handleDepartmentClick}
           />
-          {/* Aquí se pueden agregar los IDs a los departamentos en el mapa */}
-          {departments.map(department => (
-            <path
-              key={department}
-              id={departmentIds[department]} // Asigna el ID correspondiente
-              className={`department ${selectedDepartment === department ? 'selected' : ''}`} // Aplica la clase 'selected'
-              onClick={handleDepartmentClick}
-            />
-          ))}
         </div>
         <div className="game-info">
           <h3 className="subtitle">Ubica el departamento: {targetDepartment}</h3>

@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import '../../scss/mapa.scss';
 import { ReactComponent as ColombiaMap } from '../../images/co.svg';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; // Importar SweetAlert
 
 const departments = [
   "Amazonas", "Antioquia", "Arauca", "Atlántico", "Bolívar", "Boyacá", "Caldas", "Caquetá", "Casanare", "Cauca",
@@ -58,14 +60,8 @@ export default function Mapa({ onClose }) {
     setTargetDepartment(randomDepartment);
     setSelectedDepartment("");
     setShowResult(false);
-    setNextQuestionMessage("");
-
-    const correctDepartmentId = departmentIds[targetDepartment];
-    const correctElement = document.getElementById(correctDepartmentId);
-    if (correctElement) {
-      correctElement.classList.remove('correct-department');
-    }
-  }, [targetDepartment]);
+    setNextQuestionMessage(""); // Reiniciar mensaje
+  }, []); // No necesita dependencias
 
   useEffect(() => {
     handleNextDepartment();
@@ -74,10 +70,7 @@ export default function Mapa({ onClose }) {
   const handleDepartmentClick = (event) => {
     const departmentId = event.target.id;
     const department = Object.keys(departmentIds).find(key => departmentIds[key] === departmentId);
-    
-    if (department) {
-      setSelectedDepartment(department);
-    }
+    setSelectedDepartment(department || "");
   };
 
   const handleSubmit = () => {
@@ -91,18 +84,19 @@ export default function Mapa({ onClose }) {
       icon: correct ? 'success' : 'error',
       confirmButtonText: 'Continuar',
     }).then(() => {
-      if (!correct) {
+      if (correct) {
+        setNextQuestionMessage("Próxima pregunta en 5 segundos...");
+
+        setTimeout(() => {
+          handleNextDepartment(); // Cambia de departamento después de 5 segundos
+        }, 5000);
+      } else {
         const correctDepartmentId = departmentIds[targetDepartment];
         const correctElement = document.getElementById(correctDepartmentId);
         if (correctElement) {
           correctElement.classList.add('correct-department');
         }
       }
-
-      setNextQuestionMessage("La próxima pregunta aparecerá en 5 segundos...");
-      setTimeout(() => {
-        handleNextDepartment();
-      }, 5000);
     });
   };
 
@@ -116,19 +110,10 @@ export default function Mapa({ onClose }) {
             className="map"
             onClick={handleDepartmentClick}
           />
-          {/* Aquí se pueden agregar los IDs a los departamentos en el mapa */}
-          {departments.map(department => (
-            <path
-              key={department}
-              id={departmentIds[department]} // Asigna el ID correspondiente
-              className={`department ${selectedDepartment === department ? 'selected' : ''}`} // Aplica la clase 'selected'
-              onClick={handleDepartmentClick}
-            />
-          ))}
         </div>
         <div className="game-info">
           <h3 className="subtitle">Ubica el departamento: {targetDepartment}</h3>
-          {nextQuestionMessage && <p>{nextQuestionMessage}</p>}
+          {nextQuestionMessage && <p>{nextQuestionMessage}</p>} {/* Mostrar mensaje aquí */}
           <button
             onClick={handleSubmit}
             disabled={!selectedDepartment || showResult}
