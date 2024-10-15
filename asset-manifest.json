@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/GeoEx-colombia/static/css/main.4636824a.css",
-    "main.js": "/GeoEx-colombia/static/js/main.3c6832c3.js",
+    "main.css": "/GeoEx-colombia/static/css/main.e1efc18f.css",
+    "main.js": "/GeoEx-colombia/static/js/main.57f7f614.js",
     "static/js/453.bc7f5fa1.chunk.js": "/GeoEx-colombia/static/js/453.bc7f5fa1.chunk.js",
     "static/media/co.svg": "/GeoEx-colombia/static/media/co.d59e33acfdd648e9702d7fb4671fcc5c.svg",
     "index.html": "/GeoEx-colombia/index.html",
-    "main.4636824a.css.map": "/GeoEx-colombia/static/css/main.4636824a.css.map",
-    "main.3c6832c3.js.map": "/GeoEx-colombia/static/js/main.3c6832c3.js.map",
+    "main.e1efc18f.css.map": "/GeoEx-colombia/static/css/main.e1efc18f.css.map",
+    "main.57f7f614.js.map": "/GeoEx-colombia/static/js/main.57f7f614.js.map",
     "453.bc7f5fa1.chunk.js.map": "/GeoEx-colombia/static/js/453.bc7f5fa1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4636824a.css",
-    "static/js/main.3c6832c3.js"
+    "static/css/main.e1efc18f.css",
+    "static/js/main.57f7f614.js"
   ]
 }
