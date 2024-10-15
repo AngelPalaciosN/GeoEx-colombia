@@ -26,16 +26,14 @@ export default function Mapa({ onClose }) {
   const [targetDepartment, setTargetDepartment] = useState("");
   const [countdown, setCountdown] = useState(10);
   const [showNextQuestionMessage, setShowNextQuestionMessage] = useState(false);
-  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false); // Nueva variable de estado
 
   const handleNextDepartment = useCallback(() => {
     const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
     setTargetDepartment(randomDepartment);
     setCountdown(10);
-    setShowNextQuestionMessage(false);
-    setIsAnswerSubmitted(false);
-    setHasInteracted(false); // Reinicia la interacción
+    setShowNextQuestionMessage(false); // Reinicia el mensaje de la siguiente pregunta
+    setIsAnswerSubmitted(false); // Reinicia el estado de respuesta
 
     const previousCorrectId = departmentIds[targetDepartment];
     if (previousCorrectId) {
@@ -52,11 +50,11 @@ export default function Mapa({ onClose }) {
 
   useEffect(() => {
     let interval;
-    if (isAnswerSubmitted) {
+    if (isAnswerSubmitted) { // Solo iniciar el intervalo si se ha enviado una respuesta
       interval = setInterval(() => {
         setCountdown(prevCountdown => {
           if (prevCountdown > 1) {
-            return prevCountdown - 1;
+            return prevCountdown - 1; // Disminuir la cuenta regresiva
           } else {
             clearInterval(interval);
             handleNextDepartment();
@@ -66,7 +64,7 @@ export default function Mapa({ onClose }) {
       }, 1000);
     }
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); 
   }, [isAnswerSubmitted, handleNextDepartment]);
 
   const handleDepartmentClick = (event) => {
@@ -74,7 +72,6 @@ export default function Mapa({ onClose }) {
     const department = Object.keys(departmentIds).find(key => departmentIds[key] === departmentId);
 
     if (department) {
-      setHasInteracted(true);
       const correct = department === targetDepartment;
       const correctDepartmentId = departmentIds[targetDepartment];
 
@@ -90,8 +87,8 @@ export default function Mapa({ onClose }) {
             correctElement.classList.add('correct-department');
           }
         }
-        setShowNextQuestionMessage(true);
-        setIsAnswerSubmitted(true);
+        setShowNextQuestionMessage(true); // Cambiar aquí
+        setIsAnswerSubmitted(true); // Indica que se ha enviado una respuesta
       });
     }
   };
@@ -107,12 +104,9 @@ export default function Mapa({ onClose }) {
         <div className="game-info">
           <h3 className="subtitle">Ubica el departamento: {targetDepartment}</h3>
         </div>
-        {hasInteracted && countdown === 0 && (
-          <div className="next-question-message">¡Pronto aparecerá la próxima pregunta!</div>
-        )}
-        {hasInteracted && countdown > 0 && (
-          <div className="next-question-message">La siguiente pregunta vendrá en {countdown}...</div>
-        )}
+        {countdown === 0 && <div className="next-question-message">La siguiente pregunta vendrá en...</div>}
+        {countdown > 0 && <div className="next-question-message">La siguiente pregunta vendrá en {countdown}...</div>}
+        {showNextQuestionMessage && countdown === 0 && <div className="next-question-message">¡Pronto aparecerá la próxima pregunta!</div>}
         <div className="button-container">
           <Button
             onClick={onClose}

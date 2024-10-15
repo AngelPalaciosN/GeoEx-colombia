@@ -25,18 +25,13 @@ const departmentIds = {
 export default function Mapa({ onClose }) {
   const [targetDepartment, setTargetDepartment] = useState("");
   const [countdown, setCountdown] = useState(10);
-  const [showNextQuestionMessage, setShowNextQuestionMessage] = useState(false);
-  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
 
   const handleNextDepartment = useCallback(() => {
     const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
     setTargetDepartment(randomDepartment);
     setCountdown(10);
-    setShowNextQuestionMessage(false);
-    setIsAnswerSubmitted(false);
-    setHasInteracted(false); // Reinicia la interacción
-
+    
+    // Remover clases de departamentos previamente resaltados
     const previousCorrectId = departmentIds[targetDepartment];
     if (previousCorrectId) {
       const previousCorrectElement = document.getElementById(previousCorrectId);
@@ -51,47 +46,52 @@ export default function Mapa({ onClose }) {
   }, [handleNextDepartment]);
 
   useEffect(() => {
-    let interval;
-    if (isAnswerSubmitted) {
-      interval = setInterval(() => {
-        setCountdown(prevCountdown => {
-          if (prevCountdown > 1) {
-            return prevCountdown - 1;
-          } else {
-            clearInterval(interval);
-            handleNextDepartment();
-            return 0;
-          }
-        });
-      }, 1000);
-    }
+    const interval = setInterval(() => {
+      setCountdown(prevCountdown => {
+        if (prevCountdown > 1) {
+          return prevCountdown - 1; // Disminuir la cuenta regresiva
+        } else {
+          clearInterval(interval);
+          handleNextDepartment();
+          return 0;
+        }
+      });
+    }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isAnswerSubmitted, handleNextDepartment]);
+    return () => clearInterval(interval); 
+  }, [handleNextDepartment]);
 
   const handleDepartmentClick = (event) => {
     const departmentId = event.target.id;
     const department = Object.keys(departmentIds).find(key => departmentIds[key] === departmentId);
 
     if (department) {
-      setHasInteracted(true);
       const correct = department === targetDepartment;
       const correctDepartmentId = departmentIds[targetDepartment];
 
       Swal.fire({
-        title: correct ? '¡Correcto!' : 'Incorrecto',
-        text: `Elegiste ${department}. La respuesta correcta es ${targetDepartment}.`,
+        title: `<div style="text-align: center;">${correct ? '¡Correcto!' : 'Incorrecto'}</div>`, 
+        text: `<div style="text-align: center;">Elegiste ${department}. La respuesta correcta es ${targetDepartment}.</div>`, // Centrar el texto
         icon: correct ? 'success' : 'error',
         confirmButtonText: 'Continuar',
+        html: `<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                  ${correct ? '<CheckCircle />' : '<XCircle />'} 
+                  <div style="text-align: center;">
+                    ${correct ? `¡Correcto! elegiste ${department}` : `Incorrecto, elegiste ${department}.`}
+                  </div>
+                  <div style="text-align: center; margin-top: 10px;">
+                    <strong>Revisa el mapa.</strong>
+                  </div>
+                </div>`,
       }).then(() => {
         if (!correct) {
+          const correctDepartmentId = departmentIds[targetDepartment];
           const correctElement = document.getElementById(correctDepartmentId);
           if (correctElement) {
             correctElement.classList.add('correct-department');
           }
         }
         setShowNextQuestionMessage(true);
-        setIsAnswerSubmitted(true);
       });
     }
   };
@@ -107,12 +107,9 @@ export default function Mapa({ onClose }) {
         <div className="game-info">
           <h3 className="subtitle">Ubica el departamento: {targetDepartment}</h3>
         </div>
-        {hasInteracted && countdown === 0 && (
-          <div className="next-question-message">¡Pronto aparecerá la próxima pregunta!</div>
-        )}
-        {hasInteracted && countdown > 0 && (
-          <div className="next-question-message">La siguiente pregunta vendrá en {countdown}...</div>
-        )}
+        <div className="countdown">
+          {countdown === 0 && <div className="next-question-message">La próxima pregunta aparecerá...</div>}
+        </div>
         <div className="button-container">
           <Button
             onClick={onClose}

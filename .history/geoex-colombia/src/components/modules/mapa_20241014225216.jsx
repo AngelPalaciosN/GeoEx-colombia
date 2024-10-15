@@ -25,7 +25,7 @@ const departmentIds = {
 export default function Mapa({ onClose }) {
   const [targetDepartment, setTargetDepartment] = useState("");
   const [countdown, setCountdown] = useState(10);
-  const [showNextQuestionMessage, setShowNextQuestionMessage] = useState(false);
+  const [setShowNextQuestionMessage] = useState(false);
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
