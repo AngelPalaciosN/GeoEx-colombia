@@ -1,0 +1,109 @@
+/* mapa.scss */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+  
+  .MapaV {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0s, opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  }
+  
+  .MapaV.show {
+    visibility: visible;
+    opacity: 1;
+    animation: fadeIn 0.5s forwards;
+  }
+  
+  .MapaV.hide {
+    animation: fadeOut 0.5s forwards;
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0s 0.5s;
+  }
+  
+  /* Estilos para pantallas grandes (PC y laptop) */
+  @media (min-width: 768px) {
+    .MapaV {
+      width: 90%; /* Más ancho */
+      height: 80%; /* Menos alto */
+      max-width: 1200px; /* Limitar el ancho máximo */
+      max-height: 600px; /* Limitar la altura máxima */
+      margin: 5% auto; /* Centrar el componente */
+      padding: 20px;
+    }
+  
+    .map-container {
+      height: 100%; /* Asegurarse de que el mapa ocupe toda la altura disponible */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .map {
+      width: 100%;
+      max-width: 100%; /* Asegurar que el mapa ocupe todo el ancho del contenedor */
+      height: auto; /* Ajustar la altura automáticamente */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .MapaV {
+      width: 100%; /* Más ancho */
+      height: 70%; /* Menos alto */
+      max-width: 1400px; /* Ancho máximo mayor en pantallas muy grandes */
+      max-height: 700px; /* Limitar altura máxima */
+      margin: 5% auto; /* Centrar el componente */
+    }
+  
+    .map {
+      width: 100%;
+      height: auto;
+    }
+  }
+  
+  /* Estilos por defecto (para móvil) */
+  @media (max-width: 767px) {
+    .MapaV {
+      width: 100%; /* Mantener el ancho completo en móviles */
+      height: 100%; /* Mantener el alto completo en móviles */
+      max-width: none; /* Sin límite de ancho */
+      max-height: none; /* Sin límite de altura */
+      margin: 0 auto; /* Centrar */
+    }
+  
+    .map-container {
+      height: auto;
+    }
+  
+    .map {
+      width: 100%;
+      height: auto;
+    }
+  }
+  
